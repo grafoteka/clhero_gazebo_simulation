@@ -24,7 +24,7 @@
 
   <!-- Load the URDF into the ROS Parameter Server -->
   <param name="robot_description"
-         command="$(find xacro)/xacro --inorder '$(find clhero_sim_description)/robots/clhero.urdf.xacro'" />
+         command="$(find xacro)/xacro --inorder '$(find clhero_description)/robots/clhero.urdf.xacro'" />
          
   <!--node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
         <remap from="/joint_states" to="/joint_states" />
@@ -32,6 +32,24 @@
 
   <!-- Call a python script to the run a service call to gazebo_ros to spawn a URDF robot -->
   <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
-        args="-urdf -model clhero -param robot_description"/>
+        args="-urdf -model clhero -param robot_description">
+  </node>
+
+  <!--node ns="/clhero/camera_depth/camera" pkg="image_proc" type="image_proc" name="image_proc"/>
+
+    <node pkg="nodelet" type="nodelet" name="depth_rectifier_manager" args="manager" output="screen"/>
+
+  <node pkg="nodelet" type="nodelet" name="rectify_mono" args="load image_proc/rectify depth_rectifier_manager" output="screen" >
+     <remap from="image_mono" to="/clhero/camera_depth/camera/image_raw"/>
+     <remap from="image_rect" to="/clhero/camera_depth/camera/image_rect"/>
+    </node-->
+
+    <!-- This nodelet is for rectifying the depth image-->
+    <!--node pkg="nodelet" type="nodelet" name="depth_rectifier_manager" args="manager" output="screen"/-->
+
+    <!--node pkg="nodelet" type="nodelet" name="rectify_mono" args="load image_proc/rectify depth_rectifier_manager" output="screen" >
+        <remap from="image_mono" to="/clhero/camera_depth/camera/aligned_depth_to_color/image_raw"/>
+        <remap from="image_rect" to="/clhero/camera_depth/camera/aligned_depth_to_color/image_rect"/>
+    </node-->
 
 </launch>
